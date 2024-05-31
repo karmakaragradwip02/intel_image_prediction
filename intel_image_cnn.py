@@ -109,6 +109,15 @@ def train_test_count(train_path, test_path):
 
 ###########################################################################
 def main():
+
+    # Set up DagsHub as the remote tracking server
+    MLFLOW_TRACKING_URI = "https://dagshub.com/karmakaragradwip02/intel_image_prediction.mlflow"
+    os.environ['MLFLOW_TRACKING_URI'] = MLFLOW_TRACKING_URI
+    os.environ['MLFLOW_TRACKING_USERNAME'] = 'karmakaragradwip02'
+    os.environ['MLFLOW_TRACKING_PASSWORD'] = '9ccb0f28354fcca6469017b32544fa0704b9c343'
+
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
 
