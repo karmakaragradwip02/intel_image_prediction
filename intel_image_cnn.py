@@ -28,11 +28,11 @@ def define_transforms():
 def data_loader(train_path, test_path, transformer):
     train_loader = DataLoader(
         torchvision.datasets.ImageFolder(train_path, transform=transformer),
-        batch_size=16, shuffle=True
+        batch_size=32, shuffle=True
     )
     test_loader = DataLoader(
         torchvision.datasets.ImageFolder(test_path, transform=transformer),
-        batch_size=16, shuffle=True
+        batch_size=32, shuffle=True
     )
     return train_loader, test_loader
 
@@ -134,18 +134,18 @@ def main():
     train_count, test_count = train_test_count(train_path, test_path)
 
     model = ConvNet(num_classes=6).to(device)
-    optimizer = Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
+    optimizer = Adam(model.parameters(), lr=3e-6, weight_decay=3e-7)
     loss_function = nn.CrossEntropyLoss()
-    num_epochs = 1
+    num_epochs = 5
 
     with mlflow.start_run() as run:
         try:
             print("mlflow starting")
-            mlflow.log_param("learning_rate", 0.001)
-            mlflow.log_param("weight_decay", 0.0001)
-            mlflow.log_param("batch_size", 16)
-            mlflow.log_param("epochs", 1)
-
+            mlflow.log_param("learning_rate", 3e-6)
+            mlflow.log_param("weight_decay", 3e-7)
+            mlflow.log_param("batch_size", 32)
+            mlflow.log_param("epochs", 5)
+            mlflow.log_param("loss_function", loss_function.__class__.__name__)
             for epoch in range(num_epochs):
                 print("Epoch:", epoch)
                 model.train()
@@ -172,7 +172,7 @@ def main():
                 train_accuracy = train_accuracy / train_count
                 train_loss = train_loss / train_count
                 
-                mlflow.pytorch.log_model(model)
+                mlflow.pytorch.log_model(model, artifact_path="models")
 
                 model.eval()
 
