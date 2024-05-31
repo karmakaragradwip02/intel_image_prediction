@@ -1,0 +1,6 @@
+torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+numpy
+scikit-learn
+torch
+mlflow
+matplotlib
