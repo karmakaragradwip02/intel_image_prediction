@@ -8,7 +8,7 @@ data_ingestion:
 
 data_preparation:
   root_dir: artifacts/data_preparation
-  data_dir: artifacts/data_ingestion/Intel_Image_Dataset
+  data_dir: artifacts/data_ingestion/Dataset/data
   train_dir: artifacts/data_preparation/train
   test_dir: artifacts/data_preparation/test
   val_dir: artifacts/data_preparation/val
