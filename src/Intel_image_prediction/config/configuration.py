@@ -1,6 +1,7 @@
 from Intel_image_prediction.constants import *
 from Intel_image_prediction.utils.common import read_yaml, create_directories
-from Intel_image_prediction.entity.config_entity import DataIngestionConfig, DataPreparationConfig
+from Intel_image_prediction.entity.config_entity import DataIngestionConfig, DataPreparationConfig, ModelPreparationTrainingConfig
+
 
 class ConfigurationManager:
     def __init__(self,
@@ -39,3 +40,26 @@ class ConfigurationManager:
         )
 
         return data_preparation_config
+    
+    def get_model_prep_train_config(self) -> ModelPreparationTrainingConfig:
+        config = self.config.model_preparation_training
+        create_directories([config.root_dir])
+
+        model_prep_train_config = ModelPreparationTrainingConfig(
+            root_dir=Path(config.root_dir),
+            model_dir=Path(config.model_dir),
+            train_dir=Path(config.train_dir),
+            val_dir=Path(config.val_dir),
+            history_dir=Path(config.history_dir),
+            classes=int(self.params.classes),
+            learning_rate=float(self.params.learning_rate),
+            epochs=int(self.params.epochs),
+            weight_decay=float(self.params.weight_decay),
+            input_image_size=[int(x) for x in self.params.input_image_size],
+            epsilon=float(self.params.epsilon),
+            momentum = float(self.params.momentum),
+            decay_rate = float(self.params.decay_rate),
+            batch_size=int(self.params.batch_size)
+        )
+        
+        return model_prep_train_config
