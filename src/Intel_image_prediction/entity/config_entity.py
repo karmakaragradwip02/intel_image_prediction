@@ -37,9 +37,10 @@ class ModelPreparationTrainingConfig:
 class ModelEvaluationConfig:
     root_dir: Path
     trained_model_dir: Path
-    val_dir: Path
+    test_dir: Path
     history_dir: Path
     graph_dir: Path
     mlflow_uri: str
     all_params: dict
     epochs: int
+    classes: int

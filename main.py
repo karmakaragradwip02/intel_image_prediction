@@ -2,6 +2,7 @@ from Intel_image_prediction import logger
 from Intel_image_prediction.pipeline.data_ingestion_pipeline import DataIngestionTrainingPipeline
 from Intel_image_prediction.pipeline.data_preparation_pipeline import DataPreparationTrainingPipeline
 from Intel_image_prediction.pipeline.model_prep_train_pipeline import ModelPreparationTrainingPipeline
+from Intel_image_prediction.pipeline.model_evaluation_pipeline import ModelEvaluationPipeline
 
 STAGE_NAME = "DATA INGESTION STAGE"
 
@@ -36,6 +37,18 @@ if __name__ == '__main__':
     try: 
         logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
         obj = ModelPreparationTrainingPipeline()
+        obj.main()
+        logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<")
+    except Exception as e:
+        logger.exception(e)
+        raise e
+
+STAGE_NAME = "MODEL EVALUATION STAGE"
+
+if __name__ == '__main__':
+    try: 
+        logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+        obj = ModelEvaluationPipeline()
         obj.main()
         logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<")
     except Exception as e:

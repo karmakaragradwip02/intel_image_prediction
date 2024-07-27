@@ -1,6 +1,6 @@
 from Intel_image_prediction.constants import *
 from Intel_image_prediction.utils.common import read_yaml, create_directories
-from Intel_image_prediction.entity.config_entity import DataIngestionConfig, DataPreparationConfig, ModelPreparationTrainingConfig
+from Intel_image_prediction.entity.config_entity import DataIngestionConfig, DataPreparationConfig, ModelPreparationTrainingConfig, ModelEvaluationConfig
 
 
 class ConfigurationManager:
@@ -63,3 +63,22 @@ class ConfigurationManager:
         )
         
         return model_prep_train_config
+    
+    def get_model_evaluation_config(self) -> ModelEvaluationConfig:
+        config = self.config.model_evaluation
+
+        create_directories([config.root_dir])
+
+        model_evaluation_config = ModelEvaluationConfig(
+            root_dir = Path(config.root_dir),
+            trained_model_dir = Path(config.trained_model_dir),
+            history_dir= Path(config.history_dir),
+            graph_dir = Path(config.graph_dir),
+            test_dir= Path(config.test_dir),
+            mlflow_uri="https://dagshub.com/karmakaragradwip02/intel_image_prediction.mlflow",
+            all_params=self.params,
+            epochs = self.params.epochs,
+            classes = self.params.classes
+        )
+
+        return model_evaluation_config
