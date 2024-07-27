@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
@@ -10,6 +11,13 @@ import mlflow
 from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score, cohen_kappa_score
 from urllib.parse import urlparse
 from Intel_image_prediction import logger
+
+MLFLOW_TRACKING_URI = "https://dagshub.com/karmakaragradwip02/intel_image_prediction.mlflow"
+os.environ['MLFLOW_TRACKING_URI'] = MLFLOW_TRACKING_URI
+os.environ['MLFLOW_TRACKING_USERNAME'] = 'karmakaragradwip02'
+os.environ['MLFLOW_TRACKING_PASSWORD'] = '9ccb0f28354fcca6469017b32544fa0704b9c343'
+
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
 class ModelEvaluation:
     def __init__(self, config):
