@@ -7,7 +7,7 @@ from torchvision import transforms
 import torch.optim as optim
 from torch.optim.lr_scheduler import ExponentialLR
 import json
-from src.Intel_image_prediction import logger
+from Intel_image_prediction import logger
 from Intel_image_prediction.entity.config_entity import ModelPreparationTrainingConfig
 import torch
 from torchsummary import summary
@@ -18,7 +18,6 @@ from torchvision import transforms
 import torch.optim as optim
 from torch.optim.lr_scheduler import ExponentialLR
 import json
-from src.Intel_image_prediction import logger
 
 class ModelPreparation:
     def __init__(self, config):
@@ -27,13 +26,32 @@ class ModelPreparation:
     def model(self):
         cnn = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
+
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
             nn.Flatten(),
-            nn.Linear(64 * 37 * 37, 512),
+            nn.Linear(512 * 4 * 4, 512),
             nn.ReLU(),
             nn.Linear(512, self.config.classes)
         )
@@ -70,8 +88,10 @@ class ModelPreparation:
     def model_compilation(self, model):
         epsilon = self.config.epsilon
         learning_rate = self.config.learning_rate
-        optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
-        scheduler = ExponentialLR(optimizer, gamma=self.config.decay_rate)
+        #optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
+        #scheduler = ExponentialLR(optimizer, gamma=self.config.decay_rate)
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=self.config.weight_decay)
+        scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=self.config.decay_rate)
         criterion = nn.CrossEntropyLoss()
         return model, optimizer, scheduler, criterion
 

@@ -1,0 +1,128 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/Intel_image_prediction/pipeline/data_ingestion_pipeline.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 2b1fca3774e70195d950aa2513f313e6
+      size: 1010
+    - path: src/Intel_image_prediction/pipeline/data_ingestion_pipeline.py
+      hash: md5
+      md5: 047bd011d6d9024d17fa5fc6e542f3c0
+      size: 914
+    outs:
+    - path: artifacts/data_ingestion/Dataset.zip
+      hash: md5
+      md5: 4ec4cab47d8a2233c36b5a0a7c941140
+      size: 361937904
+    - path: artifacts/data_ingestion/Dataset/data
+      hash: md5
+      md5: 0972d9f1adda3810669727f2dabb72bd.dir
+      size: 258258913
+      nfiles: 17034
+    - path: artifacts/data_ingestion/Dataset/seg_pred
+      hash: md5
+      md5: 60d3bed882c9b4f9365488a922defe37.dir
+      size: 110600684
+      nfiles: 7301
+  data_preparation:
+    cmd: python src/Intel_image_prediction/pipeline/data_preparation_pipeline.py
+    deps:
+    - path: artifacts/data_ingestion/Dataset/data
+      hash: md5
+      md5: 0972d9f1adda3810669727f2dabb72bd.dir
+      size: 258258913
+      nfiles: 17034
+    - path: config/config.yaml
+      hash: md5
+      md5: 2b1fca3774e70195d950aa2513f313e6
+      size: 1010
+    - path: src/Intel_image_prediction/pipeline/data_preparation_pipeline.py
+      hash: md5
+      md5: ddaf6c2ce9cd1d2f6d71cd09aeb88101
+      size: 948
+    outs:
+    - path: artifacts/data_preparation/test
+      hash: md5
+      md5: febfff781b9ac2c0c01cd1523ad74d7d.dir
+      size: 25981044
+      nfiles: 1706
+    - path: artifacts/data_preparation/train
+      hash: md5
+      md5: fbc6bb3bf126ae114b947a6afc101524.dir
+      size: 180690423
+      nfiles: 11920
+    - path: artifacts/data_preparation/val
+      hash: md5
+      md5: df1b1ce05b06879242c205aa11d33283.dir
+      size: 51587446
+      nfiles: 3408
+  model_preparation_training:
+    cmd: python src/Intel_image_prediction/pipeline/model_prep_train_pipeline.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 2b1fca3774e70195d950aa2513f313e6
+      size: 1010
+    - path: params.yaml
+      hash: md5
+      md5: 3940cedf9b88aad56cb257984c35a8a9
+      size: 162
+    - path: src/Intel_image_prediction/pipeline/model_prep_train_pipeline.py
+      hash: md5
+      md5: dc9ffe00836f5caa3f0544d844eb09c0
+      size: 1355
+    params:
+      params.yaml:
+        batch_size: 64
+        classes: 6
+        decay_rate: 0.1
+        epochs: 50
+        epsilon: 1e-08
+        input_image_size:
+        - 3
+        - 150
+        - 150
+        learning_rate: 0.0001
+        momentum: 0.9
+        weight_decay: 0.001
+    outs:
+    - path: artifacts/training/history.json
+      hash: md5
+      md5: 95c5c2fe01b5ece20739006db3fc1ce3
+      size: 5937
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: b11b1b598d8c292c6c9d4b78b8c140d0
+      size: 23091979
+  model_evaluation:
+    cmd: python src/Intel_image_prediction/pipeline/model_evaluation_pipeline.py
+    deps:
+    - path: artifacts/data_preparation/val
+      hash: md5
+      md5: df1b1ce05b06879242c205aa11d33283.dir
+      size: 51587446
+      nfiles: 3408
+    - path: artifacts/training
+      hash: md5
+      md5: bef2803a4f1238b0a6734356409b206d.dir
+      size: 23097916
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: 2b1fca3774e70195d950aa2513f313e6
+      size: 1010
+    - path: params.yaml
+      hash: md5
+      md5: 3940cedf9b88aad56cb257984c35a8a9
+      size: 162
+    - path: src/Intel_image_prediction/pipeline/model_evaluation_pipeline.py
+      hash: md5
+      md5: 9ee06f600b323c57f72ab3c7d16831f7
+      size: 1144
+    outs:
+    - path: artifacts/evaluation/graphs.png
+      hash: md5
+      md5: 178eceafd32205ff637cf44ed4fcfbf7
+      size: 49910

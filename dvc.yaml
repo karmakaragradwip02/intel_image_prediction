@@ -1,0 +1,54 @@
+stages:
+  data_ingestion:
+    cmd: python src/Intel_image_prediction/pipeline/data_ingestion_pipeline.py
+    deps:
+      - src/Intel_image_prediction/pipeline/data_ingestion_pipeline.py
+      - config/config.yaml
+    outs:
+      - artifacts/data_ingestion/Dataset/data
+      - artifacts/data_ingestion/Dataset/seg_pred
+      - artifacts/data_ingestion/Dataset.zip
+
+  data_preparation:
+    cmd: python src/Intel_image_prediction/pipeline/data_preparation_pipeline.py
+    deps:
+      - src/Intel_image_prediction/pipeline/data_preparation_pipeline.py
+      - config/config.yaml
+      - artifacts/data_ingestion/Dataset/data
+    outs:
+      - artifacts/data_preparation/train
+      - artifacts/data_preparation/test
+      - artifacts/data_preparation/val
+
+  model_preparation_training:
+    cmd: python src/Intel_image_prediction/pipeline/model_prep_train_pipeline.py
+    deps:
+      - src/Intel_image_prediction/pipeline/model_prep_train_pipeline.py
+      - config/config.yaml
+      - params.yaml
+    params:
+      - weight_decay
+      - input_image_size
+      - learning_rate
+      - epsilon
+      - classes
+      - epochs
+      - momentum
+      - decay_rate
+      - batch_size
+    outs:
+      - artifacts/training/model.h5
+    metrics:
+      - artifacts/training/history.json:
+          cache: false
+
+  model_evaluation:
+    cmd: python src/Intel_image_prediction/pipeline/model_evaluation_pipeline.py
+    deps:
+      - src/Intel_image_prediction/pipeline/model_evaluation_pipeline.py
+      - config/config.yaml
+      - artifacts/training
+      - artifacts/data_preparation/val
+      - params.yaml
+    outs:
+      - artifacts/evaluation/graphs.png

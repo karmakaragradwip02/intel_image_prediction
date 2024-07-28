@@ -1,9 +1,9 @@
-epochs: 100
+epochs: 50
 weight_decay: 0.001
 learning_rate: 0.0001
 epsilon: 1e-8
 input_image_size: [3, 150, 150]
 classes: 6
 batch_size: 64
-decay_rate: 0.9
+decay_rate: 0.1
 momentum: 0.9

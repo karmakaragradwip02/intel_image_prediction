@@ -16,6 +16,7 @@ class ModelEvaluationPipeline:
         transformer = model_evaluation.define_transforms()
         test_loader = model_evaluation.data_loader(transformer)
         model = model_evaluation.load_model(cnn)
+        model_evaluation.plot()
         model_evaluation.log_into_mlflow(model, test_loader)
     
 
