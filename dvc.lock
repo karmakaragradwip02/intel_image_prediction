@@ -61,6 +61,16 @@ stages:
   model_preparation_training:
     cmd: python src/Intel_image_prediction/pipeline/model_prep_train_pipeline.py
     deps:
+    - path: artifacts/data_preparation/test
+      hash: md5
+      md5: febfff781b9ac2c0c01cd1523ad74d7d.dir
+      size: 25981044
+      nfiles: 1706
+    - path: artifacts/data_preparation/train
+      hash: md5
+      md5: fbc6bb3bf126ae114b947a6afc101524.dir
+      size: 180690423
+      nfiles: 11920
     - path: config/config.yaml
       hash: md5
       md5: 2b1fca3774e70195d950aa2513f313e6
@@ -90,11 +100,11 @@ stages:
     outs:
     - path: artifacts/training/history.json
       hash: md5
-      md5: 95c5c2fe01b5ece20739006db3fc1ce3
-      size: 5937
+      md5: afaf32bb6c695ce0110a67cea063141f
+      size: 5936
     - path: artifacts/training/model.h5
       hash: md5
-      md5: b11b1b598d8c292c6c9d4b78b8c140d0
+      md5: 0739c13048284776c4e30da2fea7398b
       size: 23091979
   model_evaluation:
     cmd: python src/Intel_image_prediction/pipeline/model_evaluation_pipeline.py
@@ -106,8 +116,8 @@ stages:
       nfiles: 3408
     - path: artifacts/training
       hash: md5
-      md5: bef2803a4f1238b0a6734356409b206d.dir
-      size: 23097916
+      md5: 9e00a11bd623f03bdeb6516aaf328133.dir
+      size: 23097915
       nfiles: 2
     - path: config/config.yaml
       hash: md5
@@ -124,5 +134,5 @@ stages:
     outs:
     - path: artifacts/evaluation/graphs.png
       hash: md5
-      md5: 178eceafd32205ff637cf44ed4fcfbf7
-      size: 49910
+      md5: 3b759926227992746283c0854ac5e859
+      size: 49880

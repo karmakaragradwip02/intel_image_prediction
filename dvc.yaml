@@ -25,6 +25,8 @@ stages:
     deps:
       - src/Intel_image_prediction/pipeline/model_prep_train_pipeline.py
       - config/config.yaml
+      - artifacts/data_preparation/train
+      - artifacts/data_preparation/test
       - params.yaml
     params:
       - weight_decay
