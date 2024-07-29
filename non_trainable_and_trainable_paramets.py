@@ -82,12 +82,10 @@ class YourModelClass:
             nn.Flatten()
         )
 
-        # Assuming the input size is (3, 150, 150), the feature map size after the last MaxPool2d will be (1024, 4, 4)
-        # Calculating the number of features for the fully connected layer
         num_features = 1024 * 4 * 4
 
         fc_layers = nn.Sequential(
-            nn.Linear(num_features, 512),  # Adjusted to 512 units
+            nn.Linear(num_features, 512),
             nn.ReLU(),
             nn.Linear(512, self.classes)
         )
@@ -112,9 +110,10 @@ class YourModelClass:
 
         return model
 
-    def print_summary(self, input_size):
+    def print_summary(self, input_size, device):
         model = self.model()
-        summary(model, input_size)
+        # Print summary with model on CPU
+        summary(model.to('cpu'), input_size)
 
 ################################################################################
 def train_test_count(train_path, test_path):
@@ -133,8 +132,9 @@ def main():
     classes = class_name(train_path)
     train_count, test_count = train_test_count(train_path, test_path)
     model_instance = YourModelClass()
-    model_instance.print_summary((3, 150, 150))  # Example input size (3 channels, 150x150 image)
-    model = model_instance.model().to(device)
+    # Print model summary with model on CPU
+    model_instance.print_summary((3, 150, 150), device)
+    model = model_instance.model().to(device)  # Move model to the GPU
     optimizer = Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
     loss_function = nn.CrossEntropyLoss()
     num_epochs = 1
@@ -145,9 +145,7 @@ def main():
         train_loss = 0.0
 
         for i, (images, labels) in enumerate(train_loader):
-            if torch.cuda.is_available():
-                images = Variable(images.cuda())
-                labels = Variable(labels.cuda())
+            images, labels = images.to(device), labels.to(device)  # Move images and labels to the GPU
             optimizer.zero_grad()
             outputs = model(images)
             loss = loss_function(outputs, labels)
@@ -164,9 +162,7 @@ def main():
         test_loss = 0.0
         with torch.no_grad():
             for i, (images, labels) in enumerate(test_loader):
-                if torch.cuda.is_available():
-                    images = Variable(images.cuda())
-                    labels = Variable(labels.cuda())
+                images, labels = images.to(device), labels.to(device)  # Move images and labels to the GPU
                 outputs = model(images)
                 loss = loss_function(outputs, labels)
                 test_loss += loss.cpu().item() * images.size(0)
